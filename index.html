@@ -364,6 +364,11 @@
             animation: sparkle 1s ease-in-out infinite;
         }
 
+        .modal-content {
+            max-height: 90vh;        /* fit inside screen */
+            overflow-y: auto;        /* allow scrolling */
+        }
+
         @keyframes sparkle {
             0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
             50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
@@ -402,8 +407,8 @@
         }
 
         .close-modal {
-            margin-top: 30px;
-            padding: 15px 40px;
+            margin-top: 25px;
+            padding: 14px 40px;
             font-family: 'Quicksand', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
@@ -412,9 +417,11 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+            width: 100%;
+            position: sticky;
+            bottom: 0;
         }
+
 
         .close-modal:hover {
             transform: scale(1.05);
@@ -470,6 +477,21 @@
                 padding: 40px 30px;
             }
         }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .modal h2 {
+                font-size: 2rem;
+            }
+
+            .modal p {
+                font-size: 1rem;
+            }
+        }
+
     </style>
 </head>
 <body>
