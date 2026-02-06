@@ -650,10 +650,11 @@
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            if (days > 0) return `Unlocks in ${days}d ${hours}h ${minutes}m`;
-            if (hours > 0) return `Unlocks in ${hours}h ${minutes}m`;
-            return `Unlocks in ${minutes}m`;
+            if (days > 0) return `Unlocks in ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            if (hours > 0) return `Unlocks in ${hours}h ${minutes}m ${seconds}s`;
+            return `Unlocks in ${minutes}m ${seconds}s`;
         }
 
         // Update current time display
