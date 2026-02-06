@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8 Days of Love 💝</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #ff6b9d;
+            --deep-rose: #c44569;
+            --peach: #ffc3a0;
+            --cream: #fff9f0;
+            --purple: #a29bfe;
+            --gold: #ffd700;
+            --text: #2d3436;
+            --locked: #95a5a6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .current-time {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .day-card:nth-child(1) { animation-delay: 0.1s; }
+        .day-card:nth-child(2) { animation-delay: 0.2s; }
+        .day-card:nth-child(3) { animation-delay: 0.3s; }
+        .day-card:nth-child(4) { animation-delay: 0.4s; }
+        .day-card:nth-child(5) { animation-delay: 0.5s; }
+        .day-card:nth-child(6) { animation-delay: 0.6s; }
+        .day-card:nth-child(7) { animation-delay: 0.7s; }
+        .day-card:nth-child(8) { animation-delay: 0.8s; }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--rose), var(--purple));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .day-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .day-card.unlocked {
+            transform: scale(1);
+        }
+
+        .day-card.unlocked:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .day-card.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .day-card.locked::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0, 0, 0, 0.03) 10px,
+                rgba(0, 0, 0, 0.03) 20px
+            );
+            pointer-events: none;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .day-card.locked .day-number {
+            background: linear-gradient(135deg, var(--locked), #7f8c8d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lock-icon {
+            font-size: 2rem;
+            transition: all 0.3s;
+        }
+
+        .day-card.unlocked .lock-icon {
+            animation: unlock 0.6s ease-out;
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .day-date {
+            font-size: 0.95rem;
+            color: #636e72;
+            margin-bottom: 15px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-card.locked .day-date {
+            color: var(--locked);
+        }
+
+        .day-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8rem;
+            color: var(--deep-rose);
+            margin-bottom: 15px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-card.locked .day-title {
+            color: var(--locked);
+            filter: blur(4px);
+        }
+
+        .gift-preview {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .gift-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #fff9f0;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .day-card.unlocked:hover .gift-preview img {
+            transform: scale(1.05);
+        }
+
+        .day-card.locked .gift-preview {
+            filter: grayscale(100%) blur(8px);
+        }
+
+        .day-card.locked .gift-preview img {
+            filter: grayscale(100%) blur(8px);
+        }
+
+        .gift-message {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text);
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-card.locked .gift-message {
+            filter: blur(6px);
+            user-select: none;
+        }
+
+        .locked-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(149, 165, 166, 0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+            font-weight: 600;
+            color: var(--locked);
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-card.locked .locked-message {
+            display: block;
+        }
+
+        .countdown-timer {
+            font-size: 0.9rem;
+            color: var(--deep-rose);
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Modal for opened gifts */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 600px;
+            margin: 20px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: '✨';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            animation: sparkle 1s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .modal-icon {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff9f0;
+        }
+
+        .modal-icon img {
+            width: 100%;
+            height: auto;
+            max-height: 60vh;
+            object-fit: contain;
+            display: block;
+            margin: auto;
+        }
+
+
+        .modal h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            color: var(--deep-rose);
+            margin-bottom: 25px;
+        }
+
+        .modal p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .close-modal {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, var(--rose), var(--deep-rose));
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        .close-modal:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .days-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header>
+            <h1>8 Days of Love 💝</h1>
+            <p class="subtitle">A special gift for you, every day this Valentine's Week</p>
+            <div class="current-time" id="currentTime"></div>
+        </header>
+
+        <div class="days-grid" id="daysGrid">
+            <!-- Days will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <!-- Content will be inserted by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Valentine's Week 2026 dates (Feb 7-14 in IST)
+        const valentineWeek = [
+            {
+                day: 1,
+                date: '2026-02-07',
+                name: 'Rose Day',
+                image: 'images/rose_day.jpeg', // ← Replace with your image filename
+                title: 'A Rose for You',
+                message: 'Just like this rose, my love for you blooms brighter every day. You bring color and beauty into my life. Here\'s to the first day of celebrating us! Every moment with you feels like walking through a garden in full bloom.',
+                unlockTime: '00:00'
+            },
+            {
+                day: 2,
+                date: '2026-02-08',
+                name: 'Propose Day',
+                image: 'images/propose_day.jpeg', // ← Replace with your image filename
+                title: 'My Heart is Yours',
+                message: 'I choose you. Today, tomorrow, and every day after. You\'re not just my girlfriend, you\'re my best friend, my partner, and my favorite person in the world. Thank you for saying yes to this beautiful journey with me.',
+                unlockTime: '00:00'
+            },
+            {
+                day: 3,
+                date: '2026-02-09',
+                name: 'Chocolate Day',
+                image: 'images/chocolate_day.jpeg', // ← Replace with your image filename
+                title: 'Sweet as Chocolate',
+                message: 'Life with you is sweeter than the finest chocolate. Your sweetness makes every day special, and your love is the most delicious treat I could ever ask for. Here\'s to all the sweet moments we\'ve shared and all the ones yet to come!',
+                unlockTime: '00:00'
+            },
+            {
+                day: 4,
+                date: '2026-02-10',
+                name: 'Teddy Day',
+                image: 'images/teddy_day.jpeg', // ← Replace with your image filename
+                title: 'Cuddles & Comfort',
+                message: 'Just like a teddy bear, you bring me comfort, warmth, and endless joy. In your arms, I find my safe place. You\'re my cuddle buddy, my comfort zone, and the one who makes everything feel right. I cherish every hug, every moment of closeness.',
+                unlockTime: '00:00'
+            },
+            {
+                day: 5,
+                date: '2026-02-11',
+                name: 'Promise Day',
+                image: 'images/promise_day.jpeg', // ← Replace with your image filename
+                title: 'My Promises to You',
+                message: 'I promise to always make you smile, to support your dreams, to be there in good times and challenging ones. I promise to love you unconditionally, to be honest, and to choose you every single day. These aren\'t just words - they\'re my commitment to us.',
+                unlockTime: '00:00'
+            },
+            {
+                day: 6,
+                date: '2026-02-12',
+                name: 'Hug Day',
+                image: 'images/hug_day.jpeg', // ← Replace with your image filename
+                title: 'Virtual Hugs',
+                message: 'Sending you the biggest, warmest hug! Your hugs have the power to make everything better. They\'re my favorite place to be. Even when we\'re apart, know that you\'re always wrapped in my love and thoughts. Can\'t wait for our next real hug!',
+                unlockTime: '00:00'
+            },
+            {
+                day: 7,
+                date: '2026-02-13',
+                name: 'Kiss Day',
+                image: 'images/kiss_day.jpeg', // ← Replace with your image filename
+                title: 'Sealed with a Kiss',
+                message: 'Every kiss with you feels like magic. Your lips, your smile, the way you look at me - everything about you takes my breath away. Here\'s a virtual kiss until I can give you a real one. You make my heart skip a beat every single time.',
+                unlockTime: '00:00'
+            },
+            {
+                day: 8,
+                date: '2026-02-14',
+                name: 'Valentine\'s Day',
+                image: 'images/valentine_day.jpeg', // ← Replace with your image filename
+                title: 'Forever Yours',
+                message: 'Happy Valentine\'s Day, my love! This week has been all about celebrating us, but today is extra special. You are my everything - my best friend, my soulmate, my partner in crime. Thank you for being you, for loving me, and for making every day feel like Valentine\'s Day. I love you more than words can express. Here\'s to us, today and always! 💕',
+                unlockTime: '00:00'
+            }
+        ];
+
+        // Get current IST time
+        function getISTTime() {
+            const now = new Date();
+            // Convert to IST (UTC+5:30)
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(now.getTime() + istOffset + (now.getTimezoneOffset() * 60 * 1000));
+            return istTime;
+        }
+
+        // Format date for display
+        function formatDate(date) {
+            const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-IN', options);
+        }
+        
+        function canUnlock(dayDate, unlockTime = '00:00') {
+            const istNow = getISTTime();
+            const unlockDateTime = new Date(
+                `${dayDate}T${unlockTime}:00+05:30`
+            );
+            return istNow >= unlockDateTime;
+        }
+
+        // Check if a day is unlocked
+        function isDayUnlocked(dayDate) {
+            // ============================================
+            // 🔒 UNLOCK TIME CONTROL - READ THIS! 🔒
+            // ============================================
+            // Currently set to show ALL days as unlocked for REVIEW purposes.
+            // 
+            // TO ENABLE TIME-BASED LOCKING:
+            // 1. Comment out (add //) the line below that says: return true;
+            // 2. Uncomment (remove //) the three lines after it
+            // 
+            // This will make days unlock at midnight IST on their specific dates.
+            // ============================================
+            
+            // return true;  // ← COMMENT THIS LINE to enable time-based locking
+            
+            // ← UNCOMMENT THE 3 LINES BELOW to enable time-based locking
+            const istNow = getISTTime();
+            const unlockDate = new Date(dayDate + 'T00:00:00+05:30');
+            return istNow >= unlockDate;
+        }
+
+        // Calculate time until unlock
+        function getTimeUntilUnlock(dayDate) {
+            const istNow = getISTTime();
+            const unlockDate = new Date(dayDate + 'T00:00:00+05:30');
+            const diff = unlockDate - istNow;
+
+            if (diff <= 0) return null;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) return `Unlocks in ${days}d ${hours}h ${minutes}m`;
+            if (hours > 0) return `Unlocks in ${hours}h ${minutes}m`;
+            return `Unlocks in ${minutes}m`;
+        }
+
+        // Update current time display
+        function updateCurrentTime() {
+            const istTime = getISTTime();
+            const timeString = istTime.toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = `🕐 ${timeString} IST`;
+        }
+
+        // Create day cards
+        function createDayCards() {
+            const grid = document.getElementById('daysGrid');
+            grid.innerHTML = '';
+
+            valentineWeek.forEach(day => {
+               // const isUnlocked = isDayUnlocked(day.date); // Commented to enable time-based locking
+                const isUnlocked = false;
+                const card = document.createElement('div');
+                card.className = `day-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                card.dataset.day = day.day;
+
+                const unlockDate = new Date(day.date + 'T00:00:00+05:30');
+                const dateStr = formatDate(unlockDate);
+
+                const unlockReady = canUnlock(day.date, day.unlockTime);
+
+                const lockedText = unlockReady
+                    ? '💝 Click to unlock your surprise'
+                    : `⏰ Unlocks at ${day.unlockTime} IST`;
+
+                card.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-number">Day ${day.day}</div>
+                        <div class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</div>
+                    </div>
+                    <div class="day-date">${day.name} - ${dateStr}</div>
+                    <div class="day-title">${day.title}</div>
+                    <div class="gift-preview">
+                        <img src="${day.image}" alt="${day.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/ff6b9d/ffffff?text=${day.name.replace(' ', '+')}'" />
+                    </div>
+                    <div class="gift-message">${day.message}</div>
+                    <div class="locked-message">
+                         ${lockedText}
+                            ${
+                                unlockReady
+                                    ? ''
+                                    : `<div class="countdown-timer" data-date="${day.date}"></div>`
+                            }
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (canUnlock(day.date, day.unlockTime)) {
+                        card.classList.remove('locked');
+                        card.classList.add('unlocked');
+                        card.querySelector('.lock-icon').textContent = '🔓';
+                        openGift(day);
+                    } else {
+                        card.classList.add('shake');
+                        setTimeout(() => card.classList.remove('shake'), 400);
+                    }
+                });
+
+                grid.appendChild(card);
+            });
+
+            updateCountdowns();
+        }
+
+        // Update countdown timers
+        function updateCountdowns() {
+            const timers = document.querySelectorAll('.countdown-timer');
+            timers.forEach(timer => {
+                const date = timer.dataset.date;
+                const timeUntil = getTimeUntilUnlock(date);
+                if (timeUntil) {
+                    timer.textContent = timeUntil;
+                }
+            });
+        }
+
+        // Open gift modal
+        function openGift(day) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+
+            content.innerHTML = `
+                <div class="modal-icon">
+                    <img src="${day.image}" alt="${day.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/ff6b9d/ffffff?text=${day.name.replace(' ', '+')}'" />
+                </div>
+                <h2>${day.title}</h2>
+                <p style="font-weight: 600; color: var(--rose); margin-bottom: 20px;">
+                    ${day.name} - Day ${day.day}
+                </p>
+                <p>${day.message}</p>
+                <p style="margin-top: 25px; font-size: 2rem;">❤️</p>
+                <button class="close-modal" onclick="closeModal()">Close</button>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Create background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 10 + 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize
+        createDayCards();
+        createParticles();
+        updateCurrentTime();
+
+        // Update every second
+        setInterval(() => {
+            updateCurrentTime();
+            updateCountdowns();
+        }, 1000);
+
+        // Check for unlocks every minute
+        setInterval(() => {
+            createDayCards();
+        }, 60000);
+    </script>
+</body>
+</html>
